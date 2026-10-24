@@ -1,0 +1,72 @@
+name: Build SENZ Malay Windows engine
+on:
+  push:
+    paths:
+      - 'engine-localization/**'
+      - '.github/workflows/senz-malay-engine.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v7
+        with:
+          repository: HarbourMasters/Shipwright
+          ref: f0599f96f8d442f26d0fa1c5cedafddacd56633f
+          submodules: recursive
+          path: upstream
+          persist-credentials: false
+      - name: Apply Malay labels consistently to UI keys and references
+        shell: python
+        run: |
+          import json,re,pathlib,collections
+          root=pathlib.Path('upstream')
+          mapping=json.loads(pathlib.Path('engine-localization/ms-v25.json').read_text(encoding='utf-8'))
+          counts=collections.Counter()
+          pattern=re.compile(r'"(?:[^"\\]|\\.)*"')
+          for p in root.rglob('*'):
+              if p.suffix not in ('.cpp','.c','.h','.hpp'):continue
+              text=p.read_text(encoding='utf-8',errors='ignore')
+              def replace(m):
+                  try: value=json.loads(m.group())
+                  except ValueError:return m.group()
+                  if value not in mapping:return m.group()
+                  counts[value]+=1
+                  return json.dumps(mapping[value],ensure_ascii=True)
+              changed=pattern.sub(replace,text)
+              if changed!=text:p.write_text(changed,encoding='utf-8')
+          assert counts['Settings'] and counts['Graphics Options'] and counts['Controller Bindings']
+          pathlib.Path('localization-report.json').write_text(json.dumps(dict(counts),indent=2),encoding='utf-8')
+          print('Replaced',sum(counts.values()),'literals for',len(counts),'labels')
+      - uses: TheMrMilchmann/setup-msvc-dev@v4
+        with:
+          arch: x64
+      - name: Install Ninja
+        run: choco install ninja -y --no-progress
+      - name: Configure engine
+        env:
+          VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+        run: cmake -S upstream -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_REMOTE_CONTROL=0
+      - name: Build engine
+        run: cmake --build build --config Release --target soh --parallel 4
+      - name: Collect engine and source patch
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force output | Out-Null
+          Get-ChildItem build -Recurse -Filter soh.exe | Copy-Item -Destination output
+          Get-ChildItem build/soh -Filter *.dll -ErrorAction SilentlyContinue | Copy-Item -Destination output
+          Copy-Item localization-report.json output
+          Copy-Item engine-localization/ms-v25.json output
+          git -C upstream diff --binary --output="$env:GITHUB_WORKSPACE/output/malay-engine.patch"
+          if (-not (Test-Path output/soh.exe)) { throw 'Missing Windows engine' }
+      - uses: actions/upload-artifact@v7
+        with:
+          name: senz-malay-windows-engine
+          path: output
+          retention-days: 14
