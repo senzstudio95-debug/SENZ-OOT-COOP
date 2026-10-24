@@ -1,0 +1,28 @@
+name: Build SENZ post-processing runtime
+on:
+  push:
+    paths: ['.github/workflows/senz-postfx.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          repository: crosire/reshade
+          ref: 18deaa52de0c425a78b329e9cb3c497281cd00ec
+          submodules: true
+          persist-credentials: false
+      - uses: microsoft/setup-msbuild@v3
+      - name: Build 64-bit ReShade from BSD-licensed source
+        run: msbuild ReShade.sln /p:Configuration=Release /p:Platform=64-bit /m:4
+      - uses: actions/upload-artifact@v7
+        with:
+          name: senz-postfx-runtime-x64
+          path: |
+            bin/x64/Release/ReShade64.dll
+            LICENSE.md
+          retention-days: 14
