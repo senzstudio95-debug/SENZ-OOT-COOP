@@ -1,0 +1,12 @@
+{
+  "upstream_anchor_server_local_test": "PASS",
+  "create_and_join_two_clients": "PASS",
+  "absent_host_rejected": "PASS",
+  "third_launcher_client_rejected": "PASS",
+  "game_client_id_handoff": "PASS",
+  "name_role_style_cases": 6,
+  "name_reference_count": 163,
+  "windows_gameplay_tested": false,
+  "public_relay_internet_tested": false,
+  "full_world_cutscene_sync": false
+}
