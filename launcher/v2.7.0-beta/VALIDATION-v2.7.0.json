@@ -1,0 +1,10 @@
+{
+  "config_tests_pass": true,
+  "xaml_names_pass": true,
+  "engine_contains_anchor": true,
+  "dialog_records_changed": 44,
+  "phrase_occurrences_changed": 52,
+  "online_two_pc_tested": false,
+  "full_world_sync": false,
+  "windows_tested": false
+}
