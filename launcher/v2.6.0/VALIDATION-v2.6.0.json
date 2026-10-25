@@ -1,0 +1,12 @@
+{
+  "version": "2.6.0",
+  "unique_xaml_names": 49,
+  "all_ui_references_resolve": true,
+  "pe_x64_gui_icon_manifest": true,
+  "dialog_toggle_test_pass": true,
+  "dialog_records": 2115,
+  "changed_dialogues": 35,
+  "unmodified_records": 2080,
+  "native_engine_hash_pass": true,
+  "windows_runtime_tested": false
+}
