@@ -68,6 +68,7 @@ jobs:
           git -C upstream diff --binary --output="$env:GITHUB_WORKSPACE/output/malay-engine.patch"
           if (-not (Test-Path output/soh.exe)) { throw 'Missing Windows engine' }
       - uses: actions/upload-artifact@v7
+        if: always()
         with:
           name: senz-malay-windows-engine
           path: output
