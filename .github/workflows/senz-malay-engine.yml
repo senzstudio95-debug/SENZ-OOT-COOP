@@ -54,13 +54,15 @@ jobs:
           VCPKG_ROOT: ${{ github.workspace }}/vcpkg
         run: cmake -S upstream -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_REMOTE_CONTROL=0
       - name: Build engine
-        run: cmake --build build --config Release --target soh --parallel 4
+        run: cmake --build build --config Release --target soh --parallel 10
       - name: Collect engine and source patch
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force output | Out-Null
-          Get-ChildItem build -Recurse -Filter soh.exe | Copy-Item -Destination output
-          Get-ChildItem build/soh -Filter *.dll -ErrorAction SilentlyContinue | Copy-Item -Destination output
+          $engine = Get-ChildItem upstream/x64/Release,build -Recurse -Filter soh.exe -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $engine) { throw 'Missing Windows engine in configured output directories' }
+          Copy-Item $engine.FullName output/soh.exe
+          Get-ChildItem $engine.DirectoryName -Filter *.dll -ErrorAction SilentlyContinue | Copy-Item -Destination output
           Copy-Item localization-report.json output
           Copy-Item engine-localization/ms-v25.json output
           git -C upstream diff --binary --output="$env:GITHUB_WORKSPACE/output/malay-engine.patch"
