@@ -1,0 +1,16 @@
+{
+  "provider": "Railway",
+  "region": "asia-southeast1-eqsg3a",
+  "region_name": "Singapore",
+  "project_id": "d7178fee-ed68-4c99-8ec8-e7072f7c98aa",
+  "service_id": "112f2aba-ee6d-405f-b990-2c6c23d8aa78",
+  "deployment_id": "767fb81e-c198-4198-9338-148d800e1651",
+  "status": "SUCCESS",
+  "running_replicas": 1,
+  "pending_work": [],
+  "upstream_commit": "bf7b43c10b19428ceba54772c7bae3abca44a345",
+  "endpoint": "iriguchi.proxy.rlwy.net:51417",
+  "application_port": 43383,
+  "verified_date": "2026-10-25",
+  "online_two_pc_tested": false
+}
