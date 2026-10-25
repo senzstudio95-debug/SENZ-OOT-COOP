@@ -1,0 +1,9 @@
+PASS select launcher belonging to exact folder
+PASS exclude similarly named folder
+PASS exclude unrelated PowerShell script
+PASS exclude Explorer and arbitrary executable
+PASS select only game at installation path
+PASS exclude another game installation
+PASS select temp updater with exact installation argument
+PASS close no longer silently minimizes
+PASS hidden PowerShell explicitly exits after window closes

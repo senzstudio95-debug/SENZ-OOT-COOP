@@ -1,0 +1,48 @@
+SENZ v2.7.7 BETA — lobi kekal + Update GitHub
+
+BUKA GAME
+Extract pakej lengkap ke folder baharu; buka SENZ-Zelda.exe. Simpan folder/save lama.
+Untuk patch kecil: tutup game dan launcher, extract kandungan patch terus ke folder
+SENZ-OOT-SOLO yang ada SENZ-Zelda.exe, pilih Replace. Ini pemasangan awal butang Update.
+Selepas itu tekan UPDATE DARI GITHUB dalam launcher. Tidak perlu extract ulang.
+
+CO-OP
+Kedua-dua pemain perlu v2.7.7 atau lebih baharu.
+Host: Mod > CREATE LOBBY > tunggu BILIK AKTIF > SALIN KOD > hantar kepada kawan.
+Kawan: tampal kod > JOIN BY CODE > tunggu BILIK AKTIF.
+Kedua-duanya tekan PLAY CO-OP, buka save dan masuk scene sama.
+Launcher mesti kekal terbuka: butang X meminta pengesahan tutup game, kemudian keluar sepenuhnya.
+Sambungan launcher dan game menggunakan satu sesi relay; tiada cutoff 30 saat.
+Host boleh buka game dahulu; kawan masih boleh join selagi launcher host aktif.
+Jika host tutup launcher atau internet terputus, tutup game dan Create/Join semula.
+Kod lama sebelum versi ini: cipta kod baharu. Jangan kongsi kod secara awam.
+Relay: iriguchi.proxy.rlwy.net:51417 (Singapore). Tiada Steam diperlukan.
+
+UPDATE
+Tutup game, tekan Update dari GitHub. Launcher ditutup semasa updater berjalan.
+Updater semak versi, download patch, sahkan SHA256, backup fail launcher, pasang dan
+buka semula launcher. Jika gagal semasa pemasangan, fail yang diubah dipulihkan.
+Save, engine/shipofharkinian.json, ROM dan mod tidak ditimpa oleh patch launcher ini.
+Backup fail lama berada dalam update-backups. Internet diperlukan.
+
+HAD PENGESAHAN
+Ujian protokol lobi tempatan dan updater automatik dilaksanakan; bukan ujian game
+Windows dua PC melalui internet. Ping sebenar bergantung ISP. Full world/cutscene
+sync dan auto-spawn host belum dilaksanakan. Item/sebahagian flag mengikut Anchor.
+
+KAWALAN v2.7.7
+Migrasi sekali: deadzone kedua-dua stick 30%, threshold butang C 50%, trigger 30%.
+Input background dan kamera tetikus dimatikan secara lalai. Mapping custom selepas
+migrasi dikekalkan. Laras deadzone di Kawalan, kemudian Simpan/Play.
+Dalam game tekan Esc > Network > Anchor untuk menu online sedia ada enjin.
+Panel pemain Anchor Room aktif semasa co-op; boleh dimatikan melalui checkbox Mod.
+Belum diuji pada controller fizikal atau UI Windows. Drift hardware mungkin masih
+memerlukan kalibrasi/pembaikan.
+
+PEMBAIKAN KELUAR v2.7.7
+X tidak lagi minimize secara senyap. Jika game masih berjalan, pengesahan tutup
+dipaparkan; save dahulu. Selepas ditutup, sesi relay dan proses PowerShell keluar.
+Updater melepaskan lock sebelum memaparkan ralat dan berjalan dari folder sementara.
+Jika versi lama mengunci folder, gunakan SENZ-Tutup-Proses.ps1 dari luar folder game.
+Pilih folder pemasangan yang betul. Alat hanya menutup proses milik folder tersebut;
+tiada fail dipadam, tiada perubahan permission dan tiada antivirus dimatikan.

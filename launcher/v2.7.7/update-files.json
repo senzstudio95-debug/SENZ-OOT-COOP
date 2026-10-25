@@ -1,0 +1,41 @@
+{
+  "version": "2.7.7",
+  "files": [
+    {
+      "path": "Launcher.ps1",
+      "sha256": "59b17280bfcd8c9d46fe66e7901ea1cc662ac03238d048046e0b9eb31f2d0871"
+    },
+    {
+      "path": "Launcher.xaml",
+      "sha256": "c503e11cddf52a59a18a7b67d8b6002a22495fd9cb775ee27948349a3349badf"
+    },
+    {
+      "path": "Lobby.ps1",
+      "sha256": "55306e9d9a9e6ef014d4eb2796f331f5f1dc723f4b01cfe7a88c10a1a6338a92"
+    },
+    {
+      "path": "LobbyBridge.cs",
+      "sha256": "57f5d463fb015e47c63d893a81278d21df76888f64fac0c7b1380dc93c82b2e7"
+    },
+    {
+      "path": "Coop.ps1",
+      "sha256": "f8b505db7a7f6925a70e6147130c2c2270b017c7b2f996dc955286a4371278c9"
+    },
+    {
+      "path": "Updater.ps1",
+      "sha256": "1abf558d0cca797a03aab46f97ae81326193502b358c8d9719a96aea29772fd3"
+    },
+    {
+      "path": "UpdateCore.ps1",
+      "sha256": "97732da3b7d25ac40d8b934aea7832d522679ef0d6040166bbb536e8b93d3b32"
+    },
+    {
+      "path": "version.json",
+      "sha256": "cba1caf403b1d7c7b53f110673d77d29669314c2671e5fddba27613d508f34cc"
+    },
+    {
+      "path": "BACA-DULU.txt",
+      "sha256": "68e9b0c14309967567848c599545b4ef25c7696c42ad12b29f3e16ae545316f2"
+    }
+  ]
+}

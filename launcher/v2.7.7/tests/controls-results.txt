@@ -1,0 +1,10 @@
+PASS left stick deadzone 30
+PASS right stick deadzone 30
+PASS C-button axis threshold 50
+PASS mouse and background input disabled
+PASS subsequent Play preserves calibration
+PASS subsequent Play preserves custom mappings
+PASS native coop player panel enabled
+PASS network sidebar defaults to Anchor
+PASS panel toggle can hide panel
+PASS invalid deadzone rejected

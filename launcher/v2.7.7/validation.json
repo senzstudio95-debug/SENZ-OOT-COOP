@@ -1,0 +1,12 @@
+{
+  "full_package": "SENZ-Zelda-v2.7.7-BETA-LENGKAP-EXE.zip",
+  "bytes": 1475078361,
+  "sha256": "9f173ad944efff5adf9795a974b6d36028d33469e8b874bc3ed2a920864eb4e5",
+  "zip_crc": "PASS",
+  "patched_files_match": "PASS",
+  "powershell_parse": "PASS",
+  "process_selection_tests": "PASS",
+  "updater_tests": "PASS",
+  "windows_process_cleanup_tested": false,
+  "user_pc_lock_holder_verified": false
+}

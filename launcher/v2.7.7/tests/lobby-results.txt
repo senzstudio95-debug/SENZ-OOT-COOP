@@ -1,0 +1,14 @@
+PASS host room confirmed
+PASS guest joined normalized invite code
+PASS two players visible
+PASS native receives identity snapshot
+PASS native receives room settings
+PASS guest applies incremental host state
+PASS gameplay packet forwarded host to guest
+PASS gameplay packet forwarded guest to host
+PASS persistent relay survives game attach
+PASS connection remains after old 30-second cutoff
+PASS host lobby stays online after game exits
+PASS guest can rejoin same host
+PASS wrong/nonexistent host rejected, not fake success
+PASS disconnected host detected
