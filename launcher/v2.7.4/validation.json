@@ -1,0 +1,15 @@
+{
+  "filename": "SENZ-Zelda-v2.7.4-SG-BETA-LENGKAP-EXE.zip",
+  "bytes": 1475068415,
+  "sha256": "1bb4ca5bae6a4f555f5d0b30fcd0d5ccbc2023f5e404afde840a3802705d2143",
+  "zip_crc": "PASS",
+  "patched_files_match": "PASS",
+  "powershell_parse": "PASS",
+  "lobby_csharp_compile": "PASS",
+  "windows_gameplay_tested": false,
+  "malaysia_ping_tested": false,
+  "railway_status": "SUCCESS",
+  "railway_running_replicas": 1,
+  "railway_pending_work": 0,
+  "online_two_pc_tested": false
+}
