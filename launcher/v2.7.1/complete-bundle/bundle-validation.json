@@ -1,0 +1,11 @@
+{
+  "filename": "SENZ-Zelda-v2.7.1-BETA-LENGKAP-EXE.zip",
+  "bytes": 1475476831,
+  "sha256": "8593bbb0f3a9fad9ac988dca20af4e1816ad43edea1a24d199404638ff043276",
+  "files": 20465,
+  "zip_crc": "PASS",
+  "embedded_patch_match": "PASS",
+  "native_engine_hash": "PASS",
+  "windows_gameplay_tested": false,
+  "internet_two_pc_tested": false
+}
