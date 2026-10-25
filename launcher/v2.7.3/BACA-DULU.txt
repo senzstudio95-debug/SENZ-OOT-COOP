@@ -1,0 +1,12 @@
+SENZ v2.7.3 BETA — pakej lengkap
+Extract semua fail ke folder baharu dan buka SENZ-Zelda.exe. Simpan folder/save lama.
+Kedua-dua pemain mesti guna versi sama. Host: Mod > Create Room > kongsi kod.
+Kawan: Join by Code. Tunggu pengesahan, kemudian kedua-duanya tekan Play dan buka save.
+Kekalkan launcher terbuka semasa pertukaran sambungan ke game.
+Pemain kelihatan apabila kedua-duanya online, save dimuatkan dan dalam scene sama.
+Lobi kini kekal sehingga game mengambil alih atau 30 saat tamat. Join menunggu host 12 saat.
+Identiti host digunakan semula ketika reconnect ke bilik yang sama.
+Pelayan masih anchor.hm64.org:43383. Pelayan Singapura BELUM disediakan.
+Gameplay Windows dan internet dua PC BELUM diuji. Tiada jaminan bebas bug.
+Sync penuh dunia/cutscene dan auto-spawn di lokasi host belum dilaksanakan.
+Jika gagal, simpan mesej ralat dan engine/logs.
