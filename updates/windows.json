@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "version": "2.7.6",
+  "version": "2.7.7",
   "channel": "beta",
-  "url": "https://github.com/senzstudio95-debug/SENZ-OOT-COOP/releases/download/v2.7.6-controls-beta/SENZ-Update-2.7.6.zip",
-  "sha256": "e54cd759df6d086d882f2d2f50bdb4a005977323316bac65c96d997920fd6f13",
-  "bytes": 25273
+  "url": "https://github.com/senzstudio95-debug/SENZ-OOT-COOP/releases/download/v2.7.7-exit-beta/SENZ-Update-2.7.7.zip",
+  "sha256": "f51cbcd8aa7f411755319fe95e9fe7977295796827df1bb01634b5690e1a659a",
+  "bytes": 25897
 }
