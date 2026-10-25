@@ -1,4 +1,4 @@
-﻿﻿param([switch]$ValidateOnly)
+param([switch]$ValidateOnly)
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Numerics
 $Root = $PSScriptRoot
@@ -334,7 +334,13 @@ $ui.Play.Add_Click({
             $role=[string](Get-Node $cfg 'Senz.CoopRole' 'Solo')
             $code=[string](Get-Node $cfg 'CVars.gRemote.Anchor.RoomId' '')
             $ui.SettingsTabs.SelectedIndex=2
-            if($role -notin @('Host','Ivan') -or $code -notmatch '^SENZ-[0-9A-F]{16}
+            if($role -notin @('Host','Ivan') -or $code -notmatch '^SENZ-[0-9A-F]{16}$'){
+                throw 'Pilih Create Room atau masukkan kod kawan dan Join by Code dahulu.'
+            }
+            $ui.Status.Text='Menyambung semula bilik...'
+            Open-CoopLobby $role $code
+        }
+        Assert-LobbyReady; Ensure-KeyboardDefaults; Save-Options
         $script:game = Start-Process -FilePath (Join-Path $Engine 'soh.exe') -WorkingDirectory $Engine -PassThru
         $script:wasRunning=$true
         $script:HandoffDeadline=(Get-Date).AddSeconds(30)
@@ -437,102 +443,3 @@ try { Test-GameFiles; Repair-ControllerMappings; Ensure-KeyboardDefaults; Initia
 $ui.CopyCode.IsEnabled=$false
 $timer.Start()
 [void]$win.ShowDialog()
-){
-                throw 'Pilih Create Room untuk host, atau masukkan kod kawan dan tekan Join by Code.'
-            }
-            $ui.Status.Text='Menyambung semula bilik. Tunggu pengesahan pelayan...'
-            Open-CoopLobby $role $code
-        }
-        Assert-LobbyReady; Ensure-KeyboardDefaults; Save-Options
-        $script:game = Start-Process -FilePath (Join-Path $Engine 'soh.exe') -WorkingDirectory $Engine -PassThru
-        $script:wasRunning=$true
-        $ui.Status.Text='Permainan dibuka. Sahkan pengekstrakan ROM jika diminta. F2 = tetikus, F11 = skrin penuh.'
-        $ui.Play.IsEnabled=$false; $ui.SettingsPanel.IsEnabled=$false
-    } catch { Show-Error $_ }
-})
-$ui.Performance.Add_Click({ try { Enable-FastMode; Load-Options; $ui.Status.Text='MOD LAJU: HD dan kesan tambahan ditutup; 720p, skala 50%, sasaran 60 FPS.' } catch { Show-Error $_ } })
-$ui.Balanced.Add_Click({ $ui.Resolution.SelectedItem='1280x720';$ui.Scale.SelectedItem='1.0';$ui.AA.SelectedItem='2';$ui.FPS.SelectedItem='60';$ui.Status.Text='Pilihan Seimbang dipilih. Tekan Simpan Tetapan atau Main Solo.' })
-$ui.Quality.Add_Click({ try { Enable-QualityMode; Load-Options; $ui.Status.Text='KUALITI: pek HD aktif; kesan tambahan ditutup; 1080p, MSAA 4x, sasaran 60 FPS.' } catch { Show-Error $_ } })
-$ui.Ultra.Add_Click({ try { Enable-QualityMode -Ultra; Load-Options; $ui.Status.Text='ULTRA aktif: 1440p, skala 150%, MSAA 4x. Beban GPU lebih tinggi.' } catch { Show-Error $_ } })
-$ui.Help.Add_Click({ Start-Process notepad.exe -ArgumentList ('"' + (Join-Path $Root 'BACA-DULU.txt') + '"') })
-$ui.RepairPad.Add_Click({ try { Repair-ControllerMappings -Force; $ui.Status.Text='Pemetaan papan kekunci dan alat kawalan dipulihkan. Enter / Space / Start untuk mula. Salinan tetapan lama disimpan.' } catch { Show-Error $_ } })
-Add-Type @'
-using System;
-using System.Runtime.InteropServices;
-public static class SenzFocus {
- [StructLayout(LayoutKind.Sequential)] public struct RECT { public int Left,Top,Right,Bottom; }
- [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr h);
- [DllImport("user32.dll")] static extern bool ShowWindow(IntPtr h,int n);
- [DllImport("user32.dll")] static extern bool GetClientRect(IntPtr h,out RECT r);
- [DllImport("user32.dll")] static extern bool PostMessage(IntPtr h,uint m,IntPtr w,IntPtr l);
- public static bool Resume(IntPtr h) {
-  if(h==IntPtr.Zero) return false;
-  ShowWindow(h,9); bool ok=SetForegroundWindow(h);
-  RECT r; if(GetClientRect(h,out r) && r.Bottom>80) {
-   int p=((r.Bottom-35)<<16)|20;
-   PostMessage(h,0x200,IntPtr.Zero,(IntPtr)p);
-   PostMessage(h,0x201,(IntPtr)1,(IntPtr)p);
-   PostMessage(h,0x202,IntPtr.Zero,(IntPtr)p);
-  }
-  return ok;
- }
-}
-'@
-$ui.FocusGame.Add_Click({ try {
-    $games=Get-RunningGame
-    if ($games.Count -eq 0) { throw 'Buka permainan dahulu.' }
-    if (-not [SenzFocus]::Resume($games[0].MainWindowHandle)) { throw 'Windows belum beri fokus. Klik dunia permainan di luar menu.' }
-    $ui.Status.Text='Fokus dikembalikan. Tekan Enter / Space / Start. Tutup menu tetapan untuk sambung bermain.'
-} catch { Show-Error $_ } })
-$ui.TestPad.Add_Click({ Start-Process 'control.exe' -ArgumentList 'joy.cpl' })
-$ui.Runtime.Add_Click({ try {
-    $installer = Join-Path $Root 'runtime/VC_redist.x64.exe'
-    if (Test-Path $installer) { Start-Process -FilePath $installer } else { Start-Process 'https://aka.ms/vc14/vc_redist.x64.exe' }
-} catch { Show-Error $_ } })
-$ui.Files.Add_Click({ Start-Process explorer.exe -ArgumentList ('"' + $Engine + '"') })
-$ui.CreateRoom.Add_Click({try{$ui.LobbyStatus.Text='Menghubungi pelayan...';$code=New-InviteCode;Open-CoopLobby 'Host' $code;$ui.InviteCode.Text=$code;$ui.LobbyStatus.Text='ROOM AKTIF • Sen (host). Kongsi kod, kemudian tekan PLAY.';$ui.Play.Content='▶   PLAY CO-OP';$ui.Play.IsEnabled=$true;$ui.CopyCode.IsEnabled=$true}catch{$ui.LobbyStatus.Text='Gagal membuka bilik.';Show-Error $_}})
-$ui.JoinRoom.Add_Click({try{$ui.LobbyStatus.Text='Menyemak host...';Open-CoopLobby 'Ivan' $ui.InviteCode.Text;$ui.LobbyStatus.Text='JOIN DISAHKAN • Ivan merah. Tekan PLAY.';$ui.Play.Content='▶   PLAY CO-OP';$ui.Play.IsEnabled=$true}catch{$ui.LobbyStatus.Text='Join gagal. Semak kod dan host.';Show-Error $_}})
-$ui.CopyCode.Add_Click({try{Assert-LobbyReady;[Windows.Clipboard]::SetText($ui.InviteCode.Text);$ui.Status.Text='Kod bilik aktif disalin.'}catch{Show-Error $_}})
-$ui.SoloMode.Add_Click({try{Set-CoopProfile 'Solo' '';Close-Lobby;$ui.Play.Content='▶   MAIN SOLO';$ui.Play.IsEnabled=$true;$ui.LobbyStatus.Text='Solo / offline';$ui.Status.Text='Mod solo aktif.'}catch{Show-Error $_}})
-$ui.NavHome.Add_Click({$ui.SettingsTabs.SelectedIndex=0})
-$ui.NavGraphics.Add_Click({$ui.SettingsTabs.SelectedIndex=0})
-$ui.NavControls.Add_Click({$ui.SettingsTabs.SelectedIndex=1})
-$ui.NavMods.Add_Click({$ui.SettingsTabs.SelectedIndex=2})
-$ui.NavPlay.Add_Click({if($ui.Play.IsEnabled){$ui.Play.RaiseEvent(([Windows.RoutedEventArgs]::new([Windows.Controls.Button]::ClickEvent)))}})
-$ui.SaveFolder.Add_Click({try{$p=Join-Path $Engine 'Save';[void][IO.Directory]::CreateDirectory($p);Start-Process explorer.exe -ArgumentList ('"'+$p+'"')}catch{Show-Error $_}})
-$ui.About.Add_Click({[void][Windows.MessageBox]::Show($win,'SENZ Zelda v2.7.3-beta — Solo, Bahasa Melayu. Enjin Ship of Harkinian 9.3.1. Reka bentuk mengikut rujukan Sen. Pek dialog kasar: 35 dialog disunting.','Tentang SENZ','OK','Information')})
-$ui.Minimize.Add_Click({$win.WindowState='Minimized'})
-$ui.Maximize.Add_Click({if($win.WindowState -eq 'Maximized'){$win.WindowState='Normal'}else{$win.WindowState='Maximized'}})
-$ui.CloseWindow.Add_Click({$win.Close()})
-$ui.TitleBar.Add_MouseLeftButtonDown({if($_.ClickCount -eq 2){if($win.WindowState -eq 'Maximized'){$win.WindowState='Normal'}else{$win.WindowState='Maximized'}}else{$win.DragMove()}})
-$script:wasRunning=$false
-$script:focusPid=0; $script:focusDue=$null; $script:focusDone=$false
-$timer = New-Object Windows.Threading.DispatcherTimer
-$timer.Interval=[TimeSpan]::FromSeconds(2)
-$timer.Add_Tick({
-    if($script:Lobby){
-        try{Read-Lobby;if(-not $script:Lobby.Connected){throw 'Sambungan bilik terputus.'};$count=@($script:LobbyClients|Where-Object{$_.online}).Count;$ui.LobbyStatus.Text="BILIK DISAHKAN PELAYAN • $count pemain. Tekan PLAY apabila bersedia."}catch{Close-Lobby;$ui.LobbyStatus.Text='Bilik terputus. Create/Join semula.'}
-    }
-    $games=Get-RunningGame
-    if ($games.Count -gt 0) {
-        $g=$games[0]
-        if ($script:focusPid -ne $g.Id) { $script:focusPid=$g.Id; $script:focusDue=(Get-Date).AddSeconds(4); $script:focusDone=$false }
-        if (-not $script:focusDone -and (Get-Date) -ge $script:focusDue -and $g.MainWindowHandle -ne [IntPtr]::Zero) {
-            [void][SenzFocus]::Resume($g.MainWindowHandle); $script:focusDone=$true
-        }
-    } else { $script:focusPid=0 }
-    $running=((Get-RunningGame).Count -gt 0)
-    $ui.CreateRoom.IsEnabled=-not $running;$ui.JoinRoom.IsEnabled=-not $running;$ui.SoloMode.IsEnabled=-not $running;
-    $cfg=Read-Config;$onlineMode=[bool](Get-Node $cfg 'CVars.gRemote.Anchor.Enabled' 0)
-    $ui.Play.IsEnabled=(-not $running -and (-not $onlineMode -or $script:LobbyReady)); $ui.SettingsTabs.IsEnabled=-not $running; $ui.Save.IsEnabled=-not $running; $ui.NavPlay.IsEnabled=-not $running
-    if ($script:wasRunning -and -not $running) {
-        try { Load-Options; $ui.Status.Text='Permainan ditutup. Tetapan dimuat semula. Jika gagal, semak engine\logs dan BACA-DULU.txt.' } catch { Show-Error $_ }
-    }
-    $script:wasRunning=$running
-})
-$win.Add_Closed({ $timer.Stop(); Close-Lobby })
-try { Test-GameFiles; Repair-ControllerMappings; Ensure-KeyboardDefaults; Initialize-SoloQuality; Initialize-Nature; Initialize-Dialog; Initialize-CutsceneSkip; Initialize-Malay; Initialize-Visual; Load-Options; $ui.Status.Text='SENZ v2.7.3-beta | Enjin asal dipulihkan | HD/kesan pilihan | Dialog BM' } catch { Show-Error $_; $ui.Play.IsEnabled=$false }
-$ui.CopyCode.IsEnabled=$false
-$timer.Start()
-[void]$win.ShowDialog()
-
