@@ -9,6 +9,9 @@ permissions:
   contents: read
 jobs:
   windows:
+    # Retired: global string replacement changed resource/schema identifiers.
+    # Recovery v2.5.1 uses the original 9.3.1 engine until display-only localization is implemented.
+    if: ${{ false }}
     runs-on: windows-latest
     timeout-minutes: 90
     steps:
