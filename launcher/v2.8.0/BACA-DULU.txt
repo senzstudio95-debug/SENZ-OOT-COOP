@@ -1,0 +1,31 @@
+SENZ v2.8.0 — OFFLINE SAHAJA
+
+Ekstrak ZIP LENGKAP ke folder baharu milik anda. Buka SENZ-Zelda.exe.
+Jika guna ZIP UPDATE: tutup game dan launcher lama, ekstrak ke folder game sedia ada, pilih Replace.
+Update ini tidak mengandungi enjin/ROM. Jangan jalankan ZIP UPDATE sebagai pemasangan baharu.
+
+Tiada Create Lobby, Join by Code, pemain kedua atau relay pada launcher ini.
+Setiap Play mematikan Anchor, Sail dan Crowd Control serta panel Anchor.
+Enjin asal masih mengandungi menu Network; jangan aktifkannya jika mahu kekal offline.
+Save dalam engine/Save tidak dipadam atau ditukar oleh migrasi offline.
+
+Tetapan awal: 720p, DirectX 11, sasaran 60 FPS, HD/bloom/motion blur dimatikan.
+Bahasa Melayu sedia ada dikekalkan. Tetapan grafik boleh diubah; tekan SIMPAN TETAPAN.
+Play menggunakan tetapan yang sudah disimpan tanpa memerlukan pek grafik pilihan.
+Laju ialah pratetap grafik ringan, bukan jaminan 60 FPS pada semua PC.
+
+JIKA GAME GAGAL DIBUKA
+1. Klik Pulihkan Game. Ia membuat backup tetapan dan semua mod ke recovery-backups.
+   Save dikekalkan. Mod bahasa juga dimatikan sementara untuk menguji enjin asas.
+2. Klik MAIN OFFLINE. Jika DLL VC++ tiada, tab Kawalan > PASANG KOMPONEN VC++.
+3. Jika masih gagal, hantar mesej ralat serta engine/logs.
+   Log launcher baharu berada dalam %LOCALAPPDATA%\SENZ\logs.
+4. Jika folder lama terkunci, restart Windows, kemudian ekstrak ke folder baharu.
+   Salin engine/Save lama hanya selepas game ditutup. Jangan padam save asal dahulu.
+
+KAWALAN: arrow key bergerak; X tindakan; C pedang; Z sasaran; R perisai;
+Enter/Space mula/jeda; I J K L butang C. Controller menggunakan tetapan sedia ada.
+Deadzone lalai 30%. Tetapan custom tidak direset setiap Play.
+
+Butang Update dari GitHub dikekalkan; Internet hanya diperlukan jika anda memilih Update.
+Ujian skrip/migrasi tidak membuktikan game berjalan pada semua Windows/GPU.
