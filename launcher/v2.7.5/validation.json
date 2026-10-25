@@ -1,0 +1,15 @@
+{
+  "full_package": "SENZ-Zelda-v2.7.5-BETA-LENGKAP-EXE.zip",
+  "bytes": 1475075074,
+  "sha256": "164106e50344adf8744482952a29747b675fa1ae2641dc5033a0903efd7c4113",
+  "zip_crc": "PASS",
+  "patched_files_match": "PASS",
+  "powershell_parse": "PASS",
+  "bridge_compile": "PASS",
+  "xaml_xml_and_bindings": "PASS",
+  "lobby_local_protocol_fixture": "PASS",
+  "updater_install_preserve_tamper_rollback": "PASS",
+  "windows_gameplay_tested": false,
+  "online_two_pc_tested": false,
+  "live_relay_probe": "unavailable: environment DNS"
+}

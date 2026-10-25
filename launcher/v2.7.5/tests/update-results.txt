@@ -1,0 +1,9 @@
+PASS valid checksum/package extracted
+PASS update installed and version committed
+PASS save preserved
+PASS settings preserved
+PASS old launcher backed up
+PASS tampered hash rejected
+PASS untrusted update destination rejected
+PASS partial install rolled back
+PASS ZIP traversal rejected
