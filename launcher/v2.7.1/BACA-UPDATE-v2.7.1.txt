@@ -4,7 +4,6 @@ folder SENZ-OOT-SOLO lama, pilih Replace apabila diminta. Buka SENZ-Zelda.exe
 seperti biasa. Save dan config tidak ditindih oleh ZIP ini.
 
 SENZ v2.7.1 — NAMA DIALOG + LOBI SEBENAR
-Ekstrak ke folder baharu dan buka SENZ-Zelda.exe.
 
 AA 33 dalam dialog: nama daripada save/encoding tidak lagi digunakan oleh
 pek dialog BM. 163 rujukan nama kini memaparkan Sen (solo/host) atau Ivan
