@@ -1,0 +1,10 @@
+SENZ v2.7.4 SG BETA — pakej lengkap
+Extract semua ke folder baharu, buka SENZ-Zelda.exe. Simpan folder/save lama.
+Kedua-dua pemain perlu versi ini. Host: Mod > Create Room > kongsi kod baharu.
+Kawan: Join by Code. Selepas disahkan, kedua-duanya tekan Play dan buka save.
+Kekalkan launcher terbuka. Pemain mesti online, load save dan berada dalam scene sama.
+Relay Railway region Singapura: iriguchi.proxy.rlwy.net:51417
+Kod bilik lama dari relay awam tidak berpindah; host perlu Create Room baharu.
+Ping bergantung ISP/laluan rangkaian. Tiada jaminan ping terendah atau bebas bug.
+Windows gameplay, online dua PC dan ping dari Malaysia belum diuji.
+Full world/cutscene sync dan auto-spawn di lokasi host belum dilaksanakan.
