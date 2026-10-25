@@ -1,0 +1,26 @@
+SENZ v2.7.1 BETA — PAKEJ LENGKAP
+Patch nama dialog dan lobi sudah dipasang. Tidak perlu pasang ZIP update.
+Extract SEMUA fail ke folder baharu, kemudian buka SENZ-Zelda.exe.
+Jangan jalankan EXE terus dari dalam ZIP. Simpan folder/save lama.
+
+Kedua-dua pemain gunakan pakej ini.
+Host: tab Mod > CREATE ROOM > tunggu ROOM AKTIF > salin kod kepada kawan.
+Kawan: tampal kod > JOIN BY CODE > tunggu sambungan disahkan.
+Kemudian kedua-duanya tekan PLAY CO-OP dan buka save masing-masing.
+Gunakan versi game sama dan save yang sepadan untuk ujian awal.
+Sen berbaju hijau; Ivan merah. Keyboard/gamepad lalai dipasang setiap Main.
+Untuk offline, pilih Kembali Solo sebelum Main. Steam tidak diperlukan.
+
+163 rujukan nama dialog menggunakan Sen (solo/host) atau Ivan (join).
+Nama/progress save asal tidak diubah. Pek dialog BM biasa/kasar tersedia.
+HD, bloom dan blur kekal dimatikan secara lalai untuk kestabilan.
+
+Lobi sebenar menunggu pengesahan relay anchor.hm64.org:43383.
+Kod tanpa host dan pemain ketiga ditolak oleh launcher.
+Had dua pemain bukan sekatan pada relay awam. Internet/relay diperlukan.
+Anchor berkongsi pemain serta item/flag tertentu. Dunia, musuh, boss dan
+cutscene BELUM disegerakkan sepenuhnya dengan host.
+
+Ujian lobi menggunakan pelayan upstream tempatan lulus. Gameplay Windows
+dan dua PC melalui internet BELUM diuji. Ini masih beta.
+Jika gagal, hantar launcher-error.log dan log dalam engine/logs.
