@@ -1,0 +1,9 @@
+{
+  "bytes": 1475477224,
+  "sha256": "93938eba10b9396f3caccb449c150b9ffe8f8be4ed1739a7c7bbf9fa06890ef5",
+  "zip_crc": "PASS",
+  "powershell_parse": "PASS",
+  "lobby_csharp_compile": "PASS",
+  "windows_gameplay_tested": false,
+  "singapore_relay_deployed": false
+}
