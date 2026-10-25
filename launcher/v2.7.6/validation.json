@@ -1,0 +1,15 @@
+{
+  "full_package": "SENZ-Zelda-v2.7.6-BETA-LENGKAP-EXE.zip",
+  "bytes": 1475076095,
+  "sha256": "e409ae26302efea8d9c8ef282ab27b174690e681c21825222abcb095f40badd9",
+  "zip_crc": "PASS",
+  "patched_files_match": "PASS",
+  "powershell_parse": "PASS",
+  "xaml_xml_and_bindings": "PASS",
+  "controller_migration_preserve_config_tests": "PASS",
+  "updater_tests": "PASS",
+  "physical_controller_tested": false,
+  "windows_runtime_tested": false,
+  "online_two_pc_tested": false,
+  "native_menu": "existing Esc > Network > Anchor; player panel enabled via gWindows.AnchorRoom"
+}
