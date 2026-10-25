@@ -1,0 +1,9 @@
+{
+  "region": "asia-southeast1-eqsg3a",
+  "host": "iriguchi.proxy.rlwy.net",
+  "port": 51417,
+  "application_port": 43383,
+  "project_id": "d7178fee-ed68-4c99-8ec8-e7072f7c98aa",
+  "service_id": "112f2aba-ee6d-405f-b990-2c6c23d8aa78",
+  "environment_id": "081c47e2-176a-475b-891a-499db12f11ce"
+}
