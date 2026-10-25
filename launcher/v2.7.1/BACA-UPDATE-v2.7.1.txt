@@ -1,0 +1,25 @@
+﻿KEMAS KINI UNTUK PAKEJ v2.7.0
+Tutup launcher dan game. Ekstrak SEMUA kandungan ZIP ini terus ke dalam
+folder SENZ-OOT-SOLO lama, pilih Replace apabila diminta. Buka SENZ-Zelda.exe
+seperti biasa. Save dan config tidak ditindih oleh ZIP ini.
+
+SENZ v2.7.1 — NAMA DIALOG + LOBI SEBENAR
+Ekstrak ke folder baharu dan buka SENZ-Zelda.exe.
+
+AA 33 dalam dialog: nama daripada save/encoding tidak lagi digunakan oleh
+pek dialog BM. 163 rujukan nama kini memaparkan Sen (solo/host) atau Ivan
+(join). Nama dan progress save asal tidak diubah. Ini bukan tetapan MSAA.
+
+Host: tab Mod > CREATE ROOM. Tunggu ROOM AKTIF, salin kod kepada kawan.
+Kawan: tampal kod > JOIN BY CODE. Host mesti online; kod salah ditolak.
+Selepas pengesahan pelayan, kedua-dua pemain tekan PLAY dan buka save.
+Client ID lobi diserahkan kepada game supaya identiti/room sama dikekalkan.
+Kembali Solo untuk offline. Internet dan relay Anchor mesti boleh dicapai.
+
+Ini menambah lobi TCP sebenar, bukan full world/cutscene sync. Enjin Anchor
+masih menyegerakkan pemain dan item/flag tertentu sahaja. Musuh/boss dan
+cutscene belum semuanya host-authoritative. Had dua pemain diperiksa oleh
+launcher, bukan sekatan keselamatan pada relay awam.
+Kawalan keyboard/gamepad default setiap Main; Ivan merah semasa tersambung.
+Simpan folder dan save lama. Windows gameplay serta internet dua PC belum
+diuji. Jika gagal, hantar launcher-error.log dan log dalam engine/logs.
