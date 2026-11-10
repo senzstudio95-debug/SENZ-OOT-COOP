@@ -5,3 +5,5 @@ With the game stopped, choose Vulkan in Graphics, enable Experimental Frame Gene
 Uses built-in optical-flow interpolation, not AMD FSR or Lossless Scaling.
 Compilation does not validate gameplay, pacing, latency or image quality. No game/GPU benchmark performed.
 Use a separate folder and back up user data before testing. An upstream update may replace this custom EXE.
+
+Frame generation is disabled by default; enable it explicitly in Graphics settings.
