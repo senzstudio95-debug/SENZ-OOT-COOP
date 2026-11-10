@@ -1,0 +1,63 @@
+name: Verify compiled Fritchii Windows package
+on:
+  push:
+    branches: [codex/fritchii-5.7-framegen]
+    paths: [.github/workflows/verify-windows.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  startup:
+    runs-on: windows-2022
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Fritchii-v5.7-Internal-FG-Windows
+          run-id: 42909519423
+          github-token: ${{ github.token }}
+          path: emulator
+      - name: Verify CLI and visible GUI startup
+        shell: powershell
+        working-directory: emulator
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $cli = New-Object System.Diagnostics.Process
+          $cli.StartInfo.FileName = (Resolve-Path ./eden-cli.exe).Path
+          $cli.StartInfo.Arguments = '--version'
+          $cli.StartInfo.WorkingDirectory = (Get-Location).Path
+          $cli.StartInfo.UseShellExecute = $false
+          [void]$cli.Start()
+          if (-not $cli.WaitForExit(30000)) { $cli.Kill(); throw 'CLI startup timed out' }
+          $cliCode = $cli.ExitCode
+          Write-Host "Verified CLI process exit: $cliCode"
+          if ($cliCode -ne 0) { throw "CLI process failed: $cliCode" }
+          $gui = Start-Process -FilePath (Resolve-Path ./lichii.exe).Path -PassThru
+          Start-Sleep -Seconds 12
+          $gui.Refresh()
+          if ($gui.HasExited) { throw "GUI exited prematurely: $($gui.ExitCode)" }
+          $report = "GUI title: $($gui.MainWindowTitle)`nGUI window handle: $($gui.MainWindowHandle)`nGUI responding: $($gui.Responding)`nCLI exit: $cliCode"
+          Write-Host $report
+          $report | Out-File -Encoding utf8 startup-check.txt
+          Add-Type -AssemblyName System.Windows.Forms
+          Add-Type -AssemblyName System.Drawing
+          $screen = [System.Windows.Forms.SystemInformation]::VirtualScreen
+          $bitmap = New-Object System.Drawing.Bitmap($screen.Width, $screen.Height)
+          $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+          $graphics.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $bitmap.Size)
+          $bitmap.Save((Join-Path (Get-Location) 'startup-screen.png'))
+          $graphics.Dispose()
+          $bitmap.Dispose()
+          $validWindow = $gui.MainWindowHandle -ne 0 -and $gui.Responding
+          [void]$gui.CloseMainWindow()
+          if (-not $gui.WaitForExit(10000)) { $gui.Kill() }
+          if (-not $validWindow) { throw 'No responsive GUI window detected' }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Fritchii-Windows-startup-check
+          path: |
+            emulator/startup-check.txt
+            emulator/startup-screen.png
+          retention-days: 7

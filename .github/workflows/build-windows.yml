@@ -1,8 +1,6 @@
 name: Experimental Fritchii 5.7 Frame Generation
 on:
   workflow_dispatch:
-  push:
-    branches: [codex/fritchii-5.7-framegen]
 concurrency:
   group: fritchii-framegen-windows
   cancel-in-progress: true
