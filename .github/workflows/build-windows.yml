@@ -3,6 +3,9 @@ on:
   workflow_dispatch:
   push:
     branches: [codex/fritchii-5.7-framegen]
+concurrency:
+  group: fritchii-framegen-windows
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
@@ -73,8 +76,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: Fritchii-v5.7-Internal-FG-Windows
-          path: engine
-          submodules: recursive
-          persist-credentials: false/build/release/bin/
+          path: engine/build/release/bin/
           if-no-files-found: error
           retention-days: 7
