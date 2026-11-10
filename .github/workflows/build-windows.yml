@@ -102,9 +102,20 @@ jobs:
         working-directory: engine/build/release/bin
         shell: pwsh
         run: |
+          Get-ChildItem -Name
+          dumpbin /DEPENDENTS eden-cli.exe
+          dumpbin /DEPENDENTS lichii.exe
           ./eden-cli.exe --version
-          if ($LASTEXITCODE -ne 0) { throw 'CLI startup check failed' }
+          $cliExit = $LASTEXITCODE
+          Write-Host "CLI exit code: $cliExit"
+          $gui = Start-Process -FilePath (Resolve-Path ./lichii.exe) -ArgumentList '--help' -PassThru -RedirectStandardOutput gui-help.stdout.txt -RedirectStandardError gui-help.stderr.txt
+          if (-not $gui.WaitForExit(30000)) { $gui.Kill(); throw 'GUI help startup timed out' }
+          $gui.Refresh()
+          Write-Host "GUI exit code: $($gui.ExitCode)"
+          Get-Content gui-help.stdout.txt, gui-help.stderr.txt
+          if ($cliExit -ne 0 -or $gui.ExitCode -ne 0) { throw 'Windows startup check failed; inspect exit codes and imports' }
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: Fritchii-v5.7-Internal-FG-Windows
           path: engine/build/release/bin/
