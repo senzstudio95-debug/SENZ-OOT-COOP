@@ -12,6 +12,8 @@ jobs:
   windows:
     runs-on: windows-2022
     timeout-minutes: 180
+    env:
+      SCCACHE_DIR: ${{ github.workspace }}/compiler-cache
     steps:
       - uses: actions/checkout@v4
         with:
@@ -47,6 +49,19 @@ jobs:
         working-directory: engine
         shell: pwsh
         run: ./tools/windows/install-vulkan-sdk.ps1
+      - name: Install compiler cache
+        shell: pwsh
+        run: |
+          $zip = Join-Path $env:RUNNER_TEMP 'sccache.zip'
+          Invoke-WebRequest -OutFile $zip https://github.com/mozilla/sccache/releases/download/v0.19.0/sccache-v0.19.0-x86_64-pc-windows-msvc.zip
+          Expand-Archive $zip -DestinationPath (Join-Path $env:RUNNER_TEMP 'sccache')
+          $bin = (Get-ChildItem -Recurse -Filter sccache.exe (Join-Path $env:RUNNER_TEMP 'sccache')).DirectoryName
+          $bin | Out-File -Append -Encoding utf8 $env:GITHUB_PATH
+      - uses: actions/cache/restore@v4
+        with:
+          path: compiler-cache
+          key: fg57-msvc-${{ github.run_id }}
+          restore-keys: fg57-msvc-
       - name: Configure
         working-directory: engine
         shell: pwsh
@@ -55,14 +70,24 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DYUZU_TESTS=OFF `
             -DYUZU_CMD=ON -DYUZU_ROOM=OFF -DYUZU_ROOM_STANDALONE=OFF `
             -DYUZU_USE_BUNDLED_QT=OFF -DYUZU_USE_BUNDLED_SDL3=ON `
-            -DENABLE_LSFG=ON -DENABLE_UPDATE_CHECKER=OFF -DUSE_DISCORD_PRESENCE=OFF
+            -DENABLE_LSFG=ON -DENABLE_UPDATE_CHECKER=OFF -DUSE_DISCORD_PRESENCE=OFF `
+            -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
           if ($LASTEXITCODE -ne 0) { throw 'CMake configuration failed' }
       - name: Build Windows binaries
         working-directory: engine
         shell: pwsh
         run: |
-          cmake --build build/release --target yuzu yuzu-cmd --parallel 2
+          cmake --build build/release --target yuzu yuzu-cmd --parallel 4
           if ($LASTEXITCODE -ne 0) { throw 'Build failed' }
+      - name: Stop compiler cache
+        if: always()
+        shell: pwsh
+        run: sccache --stop-server
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: compiler-cache
+          key: fg57-msvc-${{ github.run_id }}
       - name: Deploy Qt runtime
         working-directory: engine
         shell: pwsh
@@ -73,6 +98,12 @@ jobs:
           Copy-Item ../patch/BUILD-NOTES.txt build/release/bin/EXPERIMENTAL-FRAMEGEN.txt
           Copy-Item ../patch/framegen-v5.7.patch build/release/bin/framegen-source.patch
           Copy-Item LICENSE.txt build/release/bin/LICENSE-upstream.txt
+      - name: Check Windows executable startup
+        working-directory: engine/build/release/bin
+        shell: pwsh
+        run: |
+          ./eden-cli.exe --version
+          if ($LASTEXITCODE -ne 0) { throw 'CLI startup check failed' }
       - uses: actions/upload-artifact@v4
         with:
           name: Fritchii-v5.7-Internal-FG-Windows
