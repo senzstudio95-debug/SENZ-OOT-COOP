@@ -1,0 +1,134 @@
+--- a/src/common/settings.h
++++ b/src/common/settings.h
+@@ -452,6 +452,11 @@
+                                                 true,
+                                                 true};
+ 
++    // Separate opt-in: stale frame_gen values must not enable experimental interpolation.
++    SwitchableSetting<bool> fritchii_frame_gen{linkage, false, "fritchii_frame_gen",
++                                               Category::Renderer, Specialization::Default,
++                                               true, false};
++
+     SwitchableSetting<bool> frame_gen{linkage, false, "frame_gen", Category::Renderer,
+                                       Specialization::Default, true, false};
+ 
+@@ -1059,8 +1064,8 @@
+ constexpr u32 MIN_FRAME_GEN_MULTIPLIER = 2;
+ constexpr u32 MAX_FRAME_GEN_MULTIPLIER = 4;
+ 
+-/// Whether frame generation runs: the setting, and never in Fritchii builds, which hide its
+-/// settings (a value left on by an older build made the camera flicker, 2026-11-09).
++/// Experimental Fritchii interpolation requires its separate opt-in and Vulkan.
++/// Other builds retain the upstream frame-generation setting.
+ [[nodiscard]] bool FrameGenActive();
+ [[nodiscard]] u32 FrameGenMultiplier();
+ /// Whether emulation runs at the speed limit: use_speed_limit, and in Fritchii always for Ocarina
+--- a/src/common/settings.cpp
++++ b/src/common/settings.cpp
+@@ -27,6 +27,7 @@
+ #include "common/fs/path_util.h"
+ #include "common/logging.h"
+ #include "common/settings.h"
++#include "common/fritchii_frame_gen_policy.h"
+ #include "common/time_zone.h"
+ 
+ #if defined(__linux__ ) && defined(ARCHITECTURE_arm64)
+@@ -401,13 +402,21 @@
+ }
+ 
+ u32 FrameGenMultiplier() {
++    if (std::string_view{Common::g_build_name} == "Fritchii") {
++        return 2;
++    }
+     return std::clamp(values.frame_gen_multiplier.GetValue(), MIN_FRAME_GEN_MULTIPLIER,
+                       MAX_FRAME_GEN_MULTIPLIER);
+ }
+ 
+ bool FrameGenActive() {
+     static const bool fritchii = std::string_view{Common::g_build_name} == "Fritchii";
+-    return values.frame_gen.GetValue() && !fritchii;
++    if (fritchii) {
++        return FritchiiFrameGenAllowed(values.fritchii_frame_gen.GetValue(),
++                                      values.renderer_backend.GetValue() == RendererBackend::Vulkan,
++                                      values.frame_gen_type.GetValue() == FrameGenType::Fsr3);
++    }
++    return values.frame_gen.GetValue();
+ }
+ 
+ namespace {
+@@ -450,6 +459,9 @@
+ size_t FrameGenMaxGenerations() {
+     if (!FrameGenActive()) {
+         return 0;
++    }
++    if (std::string_view{Common::g_build_name} == "Fritchii") {
++        return 1; // The experimental UI deliberately exposes X2 only.
+     }
+     if (values.frame_gen_target_rate.GetValue() != 0) {
+         return MAX_FRAME_GEN_MULTIPLIER - 1;
+--- a/src/yuzu/fritchii/fritchii_ui.cpp
++++ b/src/yuzu/fritchii/fritchii_ui.cpp
+@@ -154,7 +154,10 @@
+ }
+ 
+ bool HidesSetting(const std::string& label) {
+-    // No frame generation in Fritchii (real frames only), and its options are dev tools.
++    // Expose only the new opt-in; keep stale LSFG/dev settings hidden in Fritchii.
++    if (label == "fritchii_frame_gen") {
++        return !Enabled();
++    }
+     return Enabled() && label.starts_with("frame_gen");
+ }
+ 
+--- a/src/qt_common/config/shared_translation.cpp
++++ b/src/qt_common/config/shared_translation.cpp
+@@ -237,6 +237,10 @@
+     INSERT(Settings, bg_green, QString(), QString());
+     INSERT(Settings, bg_blue, QString(), QString());
+ 
++    INSERT(Settings, fritchii_frame_gen,
++           tr("Experimental Frame Generation X2 (Vulkan)"),
++           tr("Built-in optical-flow interpolation. Requires Vulkan and restarting the game. "
++              "May cause ghosting or uneven motion. This is not AMD FSR or a 60 FPS guarantee."));
+     INSERT(Settings, frame_gen, tr("Enable Frame Generation"), QString());
+     INSERT(Settings, frame_gen_type, tr("Frame Generation Type"), QString());
+     INSERT(Settings, frame_gen_multiplier, tr("Frame Generation Multiplier"), QString());
+--- a/src/yuzu/configuration/configure_graphics.cpp
++++ b/src/yuzu/configuration/configure_graphics.cpp
+@@ -363,6 +363,24 @@
+             connect(oot_aa_combobox, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+                     [this](int) { UpdateAmdFsr4Visibility(); });
+             hold_graphics.emplace(setting->Id(), group);
++        } else if (setting->Id() == Settings::values.fritchii_frame_gen.Id()) {
++            // The generic builder persists the separate opt-in before this normalization runs.
++            apply_funcs.push_back([](bool powered_on) {
++                if (powered_on || !Settings::values.fritchii_frame_gen.GetValue()) {
++                    return;
++                }
++                const bool global = Settings::IsConfiguringGlobal();
++                if (!global && Settings::values.fritchii_frame_gen.UsingGlobal()) {
++                    return; // Inheriting a global profile must not rewrite that profile.
++                }
++                Settings::values.frame_gen_type.SetGlobal(global);
++                Settings::values.frame_gen_multiplier.SetGlobal(global);
++                Settings::values.frame_gen_target_rate.SetGlobal(global);
++                Settings::values.frame_gen_type.SetValue(Settings::FrameGenType::Fsr3);
++                Settings::values.frame_gen_multiplier.SetValue(2);
++                Settings::values.frame_gen_target_rate.SetValue(0);
++            });
++            hold_graphics.emplace(setting->Id(), widget);
+         } else if (setting->Id() == Settings::values.frame_gen.Id()) {
+             frame_gen_checkbox = widget->checkbox;
+             hold_graphics.emplace(setting->Id(), widget);
+--- /dev/null
++++ b/src/common/fritchii_frame_gen_policy.h
+@@ -0,0 +1,9 @@
++// SPDX-License-Identifier: GPL-3.0-or-later
++#pragma once
++namespace Settings {
++// Deliberately independent of the legacy frame_gen value.
++[[nodiscard]] constexpr bool FritchiiFrameGenAllowed(bool requested, bool vulkan,
++                                                    bool built_in) {
++    return requested && vulkan && built_in;
++}
++} // namespace Settings

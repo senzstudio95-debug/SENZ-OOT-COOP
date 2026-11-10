@@ -1,0 +1,7 @@
+Fritchii v5.7 with experimental built-in X2 frame generation.
+Base: 52317bf0e52a1ece5beb6474689d78c6f2f4894f
+Source: https://github.com/Frizti/Fritchii/tree/fritchii-v5.7
+With the game stopped, choose Vulkan in Graphics, enable Experimental Frame Generation X2, Apply, and start the game.
+Uses built-in optical-flow interpolation, not AMD FSR or Lossless Scaling.
+Compilation does not validate gameplay, pacing, latency or image quality. No game/GPU benchmark performed.
+Use a separate folder and back up user data before testing. An upstream update may replace this custom EXE.
